@@ -9,9 +9,9 @@ import myActiveIcon from '../assets/my_act.svg';
 
 const NavBarContainer = styled.div`
   width: 440px;
-  height: 70px;
+  height: 50px;
   flex-shrink: 0;
-  background: color(display-p3 0.5654 0.78 0.8732);
+  background: #80C9E2;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -38,12 +38,11 @@ const NavItem = styled.div`
 const NavIcon = styled.img`
   width: 40px;
   height: 40px;
-  margin-bottom: 4px;
-  color: ${props => props.active ? '#DAEDFF' : '#75ACC5'};
+  margin-bottom: 1px;
 `;
 
 const NavText = styled.div`
-  margin-top: 13px;
+  margin-top: 10px;
   color: ${props => props.active ? '#DAEDFF' : '#75ACC5'};
   text-align: center;
   leading-trim: both;

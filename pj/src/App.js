@@ -4,11 +4,12 @@ import OnboardingPage from './pages/OnboardingPage';
 import Navbar from './components/Navbar'; 
 import Home from './pages/Home';
 import My from './pages/My';
-import React from 'react';
+import React, { useState } from 'react';
 
 function AppContent() {
   const location = useLocation();
   const showNavbar = location.pathname === '/home' || location.pathname === '/my';
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   
   return (
  
@@ -24,13 +25,13 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<CardPage />} />
           <Route path="/onboarding" element={<OnboardingPage />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<Home setBottomSheetOpen={setIsBottomSheetOpen} />} />
           <Route path="/my" element={<My />} />
         </Routes>
       </div>
       
     
-      {showNavbar && (
+      {showNavbar && !isBottomSheetOpen && (
         <Navbar />
       )}
     </div>

@@ -1,0 +1,6 @@
+{
+  "rootDirectory": "pj",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
+}

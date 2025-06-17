@@ -4,6 +4,7 @@ import OnboardingPage from './pages/OnboardingPage';
 import Navbar from './components/Navbar'; 
 import Home from './pages/Home';
 import My from './pages/My';
+import Write from './pages/Write';
 import React, { useState } from 'react';
 
 function AppContent() {
@@ -27,6 +28,7 @@ function AppContent() {
           <Route path="/onboarding" element={<OnboardingPage />} />
           <Route path="/home" element={<Home setBottomSheetOpen={setIsBottomSheetOpen} />} />
           <Route path="/my" element={<My />} />
+          <Route path="/write" element={<Write />} />
         </Routes>
       </div>
       

@@ -13,6 +13,14 @@ const HomeContainer = styled.div`
   align-items: center;
   justify-content: center;
   background: #f5f5f5;
+  @media (max-width: 480px) {
+    width: 100vw;
+    height: 100vh;
+    min-width: 0;
+    min-height: 0;
+    border-radius: 0;
+    padding: 0;
+  }
 `;
 
 const CardContainer = styled.div`
@@ -25,6 +33,13 @@ const CardContainer = styled.div`
   background: #fff;
   display: flex;
   flex-direction: column;
+  @media (max-width: 480px) {
+    width: 100vw;
+    height: 100vh;
+    min-width: 0;
+    min-height: 0;
+    border-radius: 0;
+  }
 `;
 
 const BackgroundImage = styled.div`
@@ -243,6 +258,14 @@ const BottomSheetContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-sizing: border-box;
+  @media (max-width: 480px) {
+    width: 100vw;
+    max-width: 100vw;
+    height: 50vh;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+  }
 `;
 
 const BottomSheetHandle = styled.div`

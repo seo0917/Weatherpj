@@ -7,7 +7,13 @@ import mapIcon from '../assets/map.svg';
 import mapActiveIcon from '../assets/map_act.svg';
 import myIcon from '../assets/my.svg';
 import myActiveIcon from '../assets/my_act.svg';
+import calendar from '../assets/calendar.svg';
+import locationIcon from '../assets/locationIcon.svg';
+import plus from '../assets/plus.svg';
 import React, { useState } from 'react';
+import { AlignCenter } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
 
 const HomeContainer = styled.div`
   width: 440px;
@@ -63,12 +69,13 @@ const InfoRow = styled.div`
 
 const InfoBox = styled.div`
   background: rgba(255,255,255,0.2);
-  border-radius: 12px;
+  border-radius: 20px;
   padding: 6px 16px;
   color: #222;
   font-size: 14px;
   font-family: Pretendard;
   font-weight: 500;
+  text-align: center;
 `;
 
 const TopText = styled.div`
@@ -144,6 +151,22 @@ const DropdownItem = styled.button`
   }
 `;
 
+const MessageRow = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 105%;
+  margin-bottom:10%;
+`;
+
+const MessageButton = styled.button`
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`;
+
 const Message = styled.div`
   color: #234E83;
   font-family: Pretendard;
@@ -154,14 +177,6 @@ const Message = styled.div`
   margin: 400px 0 24px 0;
   text-align: left;
   width: 100%;
-`;
-
-const Location = styled.div`
-  color: #222;
-  font-family: Pretendard;
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 4px;
 `;
 
 function MyNavBar() {
@@ -190,6 +205,7 @@ function MyNavBar() {
 }
 
 export default function My() {
+  const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedType, setSelectedType] = useState('DAY');
 
@@ -216,14 +232,19 @@ export default function My() {
             )}
           </TopText>
           <InfoRow>
-            <InfoBox>25.05.15</InfoBox>
-            <InfoBox>안산시 상록구 | 비</InfoBox>
+            <InfoBox><img src={calendar} alt="calendar" style={{width:14,height:14,marginRight:4}} />25.05.15</InfoBox>
+            <InfoBox><img src={locationIcon} alt="locationIcon" style={{width:13,height:14,marginRight:4}} />안산시 상록구 | 비</InfoBox>
           </InfoRow>
-          <Message>
-            비가 먼저 나가서<br />
-            기다리고 있어요.<br />
-            <span style={{fontWeight:400}}>우산 꼭 챙겨서 만나요!</span>
-          </Message>
+          <MessageRow>
+            <Message>
+              비가 먼저 나가서<br />
+              기다리고 있어요.<br />
+              <span style={{fontWeight:400}}>우산 꼭 챙겨서 만나요!</span>
+            </Message>
+            <MessageButton onClick={() => navigate('/write')}>
+              <img src={plus} alt="plus" style={{width:52,height:52, marginBottom: 30}} />
+            </MessageButton>
+          </MessageRow>
         </Content>
         <Navbar />
       </CardContainer>

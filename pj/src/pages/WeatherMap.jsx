@@ -67,7 +67,7 @@ const WeatherMap = () => {
 
       const script = document.createElement('script');
       script.id = 'kakao-map-script';
-      script.src = `//https:dapi.kakao.com/v2/maps/sdk.js?appkey=c117953be801da7bbfcfd49ff9c30485&autoload=false`;
+      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=c117953be801da7bbfcfd49ff9c30485&autoload=false`;
       script.async = true;
 
       script.onload = () => {

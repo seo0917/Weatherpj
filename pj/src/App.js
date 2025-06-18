@@ -5,11 +5,12 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import My from './pages/My';
 import Write from './pages/Write';
+import WeatherMap from './pages/WeatherMap';
 import React, { useState } from 'react';
 
 function AppContent() {
   const location = useLocation();
-  const showNavbar = location.pathname === '/home' || location.pathname === '/my';
+  const showNavbar = location.pathname === '/home' || location.pathname === '/my' || location.pathname === '/weather-map';
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   
   return (
@@ -29,6 +30,7 @@ function AppContent() {
           <Route path="/home" element={<Home setBottomSheetOpen={setIsBottomSheetOpen} />} />
           <Route path="/my" element={<My />} />
           <Route path="/write" element={<Write />} />
+          <Route path="/weather-map" element={<WeatherMap />} />
         </Routes>
       </div>
       

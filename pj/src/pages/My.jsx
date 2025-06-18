@@ -192,7 +192,7 @@ function MyNavBar() {
         <img src={homeIcon} alt="home" style={{width:40,height:40,marginBottom:4}} />
         <div style={{marginTop:13,color:'#75ACC5',fontFamily:'Pretendard',fontSize:12,fontWeight:500,textTransform:'uppercase'}}>HOME</div>
       </div>
-      <div style={{display:'flex',flexDirection:'column',alignItems:'center',cursor:'pointer'}} onClick={()=>navigate('/map')}>
+      <div style={{display:'flex',flexDirection:'column',alignItems:'center',cursor:'pointer'}} onClick={()=>navigate('/weather-map')}>
         <img src={mapIcon} alt="map" style={{width:40,height:40,marginBottom:4,filter:'grayscale(1)'}} />
         <div style={{marginTop:13,color:'#75ACC5',fontFamily:'Pretendard',fontSize:12,fontWeight:500,textTransform:'uppercase'}}>WEATHER MAP</div>
       </div>

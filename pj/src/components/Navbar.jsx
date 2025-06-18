@@ -74,14 +74,14 @@ export default function NavBar() {
         <NavText active={location.pathname === '/home'}>HOME</NavText>
       </NavItem>
       
-      {/* WEATHER MAP 현재 경로가 /map일 때 활성화 */}
-      <NavItem onClick={() => handleNavigation('/map')}>
+      {/* WEATHER MAP 현재 경로가 /weather-map일 때 활성화 */}
+      <NavItem onClick={() => handleNavigation('/weather-map')}>
         <NavIcon 
-          src={location.pathname === '/map' ? mapActiveIcon : mapIcon} 
+          src={location.pathname === '/weather-map' ? mapActiveIcon : mapIcon} 
           alt="map" 
-          active={location.pathname === '/map'} 
+          active={location.pathname === '/weather-map'} 
         />
-        <NavText active={location.pathname === '/map'}>WEATHER MAP</NavText>
+        <NavText active={location.pathname === '/weather-map'}>WEATHER MAP</NavText>
       </NavItem>
       
       {/* MY 메뉴는 현재 경로가 /my일 때 활성화 */}

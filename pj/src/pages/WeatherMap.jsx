@@ -28,7 +28,7 @@ const MapContainer = styled.div`
 
 const MapDiv = styled.div`
   width: 100%;
-  height: 400px; /* 중요: height 명시 */
+  height: 956px; 
   min-height: 400px;
 `;
 
@@ -42,7 +42,7 @@ const WeatherMap = () => {
       }
 
       const options = {
-        center: new window.kakao.maps.LatLng(33.450701, 126.570667), // 제주도
+        center: new window.kakao.maps.LatLng(37.296442644565175, 126.83532389153223),
         level: 3,
       };
 
@@ -67,7 +67,7 @@ const WeatherMap = () => {
 
       const script = document.createElement('script');
       script.id = 'kakao-map-script';
-      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=65c5f877dec8e4d2cbf95afcc51c3839&autoload=false`;
+      script.src = `//https:dapi.kakao.com/v2/maps/sdk.js?appkey=c117953be801da7bbfcfd49ff9c30485&autoload=false`;
       script.async = true;
 
       script.onload = () => {
@@ -83,7 +83,6 @@ const WeatherMap = () => {
       document.head.appendChild(script);
     };
 
-    // 짧은 지연 후 로드 (DOM 렌더링 보장)
     const timer = setTimeout(loadKakaoMapScript, 300);
     return () => clearTimeout(timer);
   }, []);

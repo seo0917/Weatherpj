@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import weathersearchlogo from '../assets/weathersearchlogo.svg';
 import WriteButton from '../components/WriteButton';
+import markericon from '../assets/markericon.svg';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -100,7 +102,27 @@ const ButtonIcon = styled.div`
   font-weight: 300;
 `;
 
+const CustomOverlay = styled.div`
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: 396px;
+  flex-shrink: 0;
+  border-radius: 25px;
+  background: rgba(166, 189, 187, 0.43);
+  background: color(display-p3 0.6683 0.7382 0.7312 / 0.43);
+  backdrop-filter: blur(2.85px);
+  z-index: 20;
+`;
+
 const WeatherMap = () => {
+  const navigate = useNavigate();
+  const [markerPos, setMarkerPos] = useState(null);
+  const mapRef = useRef(null);
+  const markerRef = useRef(null);
+
   useEffect(() => {
     const initializeMap = () => {
       const container = document.getElementById('map');
@@ -115,12 +137,13 @@ const WeatherMap = () => {
       };
 
       const map = new window.kakao.maps.Map(container, options);
+      mapRef.current = map;
 
-      const marker = new window.kakao.maps.Marker({
-        position: new window.kakao.maps.LatLng(33.450701, 126.570667),
+      // 지도 클릭 이벤트
+      window.kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+        const latlng = mouseEvent.latLng;
+        setMarkerPos({ lat: latlng.getLat(), lng: latlng.getLng() });
       });
-
-      marker.setMap(map);
     };
 
     const loadKakaoMapScript = () => {
@@ -155,6 +178,34 @@ const WeatherMap = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // 마커 렌더링 effect
+  useEffect(() => {
+    if (!mapRef.current || !window.kakao || !window.kakao.maps) return;
+    if (!markerPos) {
+      if (markerRef.current) {
+        markerRef.current.setMap(null);
+        markerRef.current = null;
+      }
+      return;
+    }
+    // 마커가 이미 있으면 위치만 이동
+    if (markerRef.current) {
+      markerRef.current.setPosition(new window.kakao.maps.LatLng(markerPos.lat, markerPos.lng));
+      markerRef.current.setMap(mapRef.current);
+    } else {
+      // 새 마커 생성
+      markerRef.current = new window.kakao.maps.Marker({
+        position: new window.kakao.maps.LatLng(markerPos.lat, markerPos.lng),
+        image: new window.kakao.maps.MarkerImage(
+          markericon,
+          new window.kakao.maps.Size(44, 44),
+          { offset: new window.kakao.maps.Point(22, 44) }
+        )
+      });
+      markerRef.current.setMap(mapRef.current);
+    }
+  }, [markerPos]);
+
   const handleSearchClick = () => {
     console.log('Search button clicked from WeatherMap');
   };
@@ -164,6 +215,7 @@ const WeatherMap = () => {
       <CardContainer>
         <MapContainer>
           <MapDiv id="map" />
+          {markerPos && <CustomOverlay />}
         </MapContainer>
         <SearchBarRow>
             <SearchBarContainer>
@@ -174,7 +226,7 @@ const WeatherMap = () => {
                 </CircularButton>
                 </SearchBar>
             </SearchBarContainer>
-            <WriteButton onClick={() => console.log('Write button clicked')}>✏️</WriteButton>
+            <WriteButton onClick={() => navigate('/weather-write')} />
         </SearchBarRow>
       </CardContainer>
     </Container>

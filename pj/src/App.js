@@ -6,6 +6,8 @@ import Home from './pages/Home';
 import My from './pages/My';
 import Write from './pages/Write';
 import WeatherMap from './pages/WeatherMap';
+import WeatherWrite from './pages/WeatherWrite';
+import WeatherWriteKey from './pages/WeatherWriteKey';
 import React, { useState } from 'react';
 
 function AppContent() {
@@ -31,6 +33,8 @@ function AppContent() {
           <Route path="/my" element={<My />} />
           <Route path="/write" element={<Write />} />
           <Route path="/weather-map" element={<WeatherMap />} />
+          <Route path="/weather-write" element={<WeatherWrite />} />
+          <Route path="/weatherwritekey" element={<WeatherWriteKey />} />
         </Routes>
       </div>
       

@@ -10,7 +10,7 @@ import myActiveIcon from '../assets/my_act.svg';
 import calendar from '../assets/calendar.svg';
 import locationIcon from '../assets/locationIcon.svg';
 import plus from '../assets/plus.svg';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AlignCenter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -179,6 +179,40 @@ const Message = styled.div`
   width: 100%;
 `;
 
+const UserTextContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  border-radius: 25px;
+  background: rgba(0, 99, 178, 0.30);
+  background: color(display-p3 0.1543 0.3804 0.6762 / 0.30);
+  backdrop-filter: blur(6.150000095367432px);
+  width: 248px;
+  height: 247px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 10;
+`;
+
+const UserText = styled.div`
+  color: color(display-p3 1 1 1);
+  text-align: right;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Pretendard;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 160%;
+  letter-spacing: -0.72px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+`;
+
 function MyNavBar() {
   const navigate = (path) => {
     if (window.location.pathname !== path) {
@@ -208,6 +242,19 @@ export default function My() {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedType, setSelectedType] = useState('DAY');
+  const [userText, setUserText] = useState('');
+  const [hasUserText, setHasUserText] = useState(false);
+
+  useEffect(() => {
+    // localStorage에서 사용자 텍스트 확인
+    const savedText = localStorage.getItem('userWeatherText');
+    const hasText = localStorage.getItem('hasUserText');
+    
+    if (savedText && hasText === 'true') {
+      setUserText(savedText);
+      setHasUserText(true);
+    }
+  }, []);
 
   const handleDropdownClick = () => setDropdownOpen(v => !v);
   const handleSelect = (type) => {
@@ -235,6 +282,11 @@ export default function My() {
             <InfoBox><img src={calendar} alt="calendar" style={{width:14,height:14,marginRight:4}} />25.05.15</InfoBox>
             <InfoBox><img src={locationIcon} alt="locationIcon" style={{width:13,height:14,marginRight:4}} />안산시 상록구 | 비</InfoBox>
           </InfoRow>
+          {hasUserText && (
+            <UserTextContainer>
+              <UserText>{userText}</UserText>
+            </UserTextContainer>
+          )}
           <MessageRow>
             <Message>
               비가 먼저 나가서<br />

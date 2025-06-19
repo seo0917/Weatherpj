@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import ImageGallery from './ImageGallery.jsx';
 import SearchBar from './SearchBar.jsx';
 import ProgressBar from './ProgressBar.jsx';
 import photo from '../assets/photo.svg';

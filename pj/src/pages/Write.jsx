@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import paintIcon from '../assets/paint.svg';
 import musicIcon from '../assets/music.svg';
@@ -87,6 +87,8 @@ const IconButton = styled.button`
 export default function Write() {
   const inputRef = useRef(null);
   const navigate = useNavigate();
+  const [text, setText] = useState('');
+  
   useEffect(() => {
     if (inputRef.current) inputRef.current.focus();
   }, []);
@@ -94,8 +96,17 @@ export default function Write() {
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
+      // 텍스트가 있을 때만 저장
+      if (text.trim()) {
+        localStorage.setItem('userWeatherText', text.trim());
+        localStorage.setItem('hasUserText', 'true');
+      }
       navigate('/my');
     }
+  };
+
+  const handleTextChange = (e) => {
+    setText(e.target.value);
   };
 
   return (
@@ -108,6 +119,8 @@ export default function Write() {
             rows={2}
             placeholder={"오늘 하루, 날씨 이야기를\n기록해주세요."}
             onKeyDown={handleKeyDown}
+            value={text}
+            onChange={handleTextChange}
           />
           <ButtonRow>
             <IconButton><img src={paintIcon} alt="그림" /></IconButton>

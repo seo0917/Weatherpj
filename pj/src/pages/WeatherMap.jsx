@@ -122,14 +122,12 @@ const WeatherMap = () => {
   const [markerPos, setMarkerPos] = useState(null);
   const mapRef = useRef(null);
   const markerRef = useRef(null);
+  const clickListenerRef = useRef(null);
 
   useEffect(() => {
     const initializeMap = () => {
       const container = document.getElementById('map');
-      if (!container) {
-        console.error('Map container not found');
-        return;
-      }
+      if (!container) return;
 
       const options = {
         center: new window.kakao.maps.LatLng(37.296442644565175, 126.83532389153223),
@@ -139,11 +137,18 @@ const WeatherMap = () => {
       const map = new window.kakao.maps.Map(container, options);
       mapRef.current = map;
 
-      // 지도 클릭 이벤트
-      window.kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+      // 기존 리스너 제거
+      if (clickListenerRef.current) {
+        window.kakao.maps.event.removeListener(map, 'click', clickListenerRef.current);
+      }
+
+      // 새 리스너 등록
+      const clickListener = function(mouseEvent) {
         const latlng = mouseEvent.latLng;
         setMarkerPos({ lat: latlng.getLat(), lng: latlng.getLng() });
-      });
+      };
+      window.kakao.maps.event.addListener(map, 'click', clickListener);
+      clickListenerRef.current = clickListener;
     };
 
     const loadKakaoMapScript = () => {
@@ -178,7 +183,7 @@ const WeatherMap = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // 마커 렌더링 effect
+  // 마커 렌더링
   useEffect(() => {
     if (!mapRef.current || !window.kakao || !window.kakao.maps) return;
     if (!markerPos) {
@@ -193,7 +198,6 @@ const WeatherMap = () => {
       markerRef.current.setPosition(new window.kakao.maps.LatLng(markerPos.lat, markerPos.lng));
       markerRef.current.setMap(mapRef.current);
     } else {
-      // 새 마커 생성
       markerRef.current = new window.kakao.maps.Marker({
         position: new window.kakao.maps.LatLng(markerPos.lat, markerPos.lng),
         image: new window.kakao.maps.MarkerImage(

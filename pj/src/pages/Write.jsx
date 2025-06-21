@@ -90,16 +90,34 @@ export default function Write() {
   const [text, setText] = useState('');
   
   useEffect(() => {
+    const savedText = localStorage.getItem('userWeatherText');
+    const savedDate = localStorage.getItem('userWeatherTextDate');
+    const today = new Date().toISOString().split('T')[0];
+
+    if (savedDate && savedDate !== today) {
+      localStorage.removeItem('userWeatherText');
+      localStorage.removeItem('userWeatherTextDate');
+      localStorage.removeItem('hasUserText');
+    } else if (savedText) {
+      setText(savedText);
+    }
+    
     if (inputRef.current) inputRef.current.focus();
   }, []);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      // 텍스트가 있을 때만 저장
-      if (text.trim()) {
-        localStorage.setItem('userWeatherText', text.trim());
+      const trimmedText = text.trim();
+      if (trimmedText) {
+        const today = new Date().toISOString().split('T')[0];
+        localStorage.setItem('userWeatherText', trimmedText);
+        localStorage.setItem('userWeatherTextDate', today);
         localStorage.setItem('hasUserText', 'true');
+      } else {
+        localStorage.removeItem('userWeatherText');
+        localStorage.removeItem('userWeatherTextDate');
+        localStorage.removeItem('hasUserText');
       }
       navigate('/my');
     }

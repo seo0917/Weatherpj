@@ -43,15 +43,15 @@ const CardContainer = styled.div`
 `;
 
 const BackgroundImage = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  width: 440px;
+  height: 956px;
   z-index: 0;
   background-image: url(${props => props.bg});
   background-size: cover;
   background-position: center;
+  position: absolute;
+  top: 0;
+  left: 0;
 `;
 
 const Content = styled.div`

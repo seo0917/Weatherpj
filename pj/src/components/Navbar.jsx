@@ -68,7 +68,7 @@ export default function NavBar() {
   };
   
   // 배경색 결정
-  const bgColor = location.pathname === '/weather-map' ? '#F7F9FC' : '#80C9E2';
+  const bgColor = (location.pathname === '/weather-map' || location.pathname === '/community') ? '#F7F9FC' : '#80C9E2';
 
   return (
     <NavBarContainer bgColor={bgColor}>
@@ -77,24 +77,24 @@ export default function NavBar() {
           src={location.pathname === '/home' ? homeActiveIcon : homeIcon} 
           alt="home" 
           active={location.pathname === '/home'} 
-          dimmed={location.pathname === '/weather-map'}
+          dimmed={location.pathname === '/weather-map' || location.pathname === '/community'}
         />
         <NavText 
           active={location.pathname === '/home'}
-          dimmed={location.pathname === '/weather-map'}
+          dimmed={location.pathname === '/weather-map' || location.pathname === '/community'}
         >HOME</NavText>
       </NavItem>
       
   
       <NavItem onClick={() => handleNavigation('/weather-map')}>
         <NavIcon 
-          src={location.pathname === '/weather-map' ? mapActiveIcon : mapIcon} 
+          src={(location.pathname === '/weather-map' || location.pathname === '/community') ? mapActiveIcon : mapIcon} 
           alt="map" 
-          active={location.pathname === '/weather-map'} 
+          active={location.pathname === '/weather-map' || location.pathname === '/community'} 
         />
         <NavText 
-          active={location.pathname === '/weather-map'}
-          weatherMapActive={location.pathname === '/weather-map'}
+          active={location.pathname === '/weather-map' || location.pathname === '/community'}
+          weatherMapActive={location.pathname === '/weather-map' || location.pathname === '/community'}
         >WEATHER MAP</NavText>
       </NavItem>
     
@@ -104,11 +104,11 @@ export default function NavBar() {
           src={location.pathname === '/my' ? myActiveIcon : myIcon} 
           alt="my" 
           active={location.pathname === '/my'} 
-          dimmed={location.pathname === '/weather-map'}
+          dimmed={location.pathname === '/weather-map' || location.pathname === '/community'}
         />
         <NavText 
           active={location.pathname === '/my'}
-          dimmed={location.pathname === '/weather-map'}
+          dimmed={location.pathname === '/weather-map' || location.pathname === '/community'}
         >MY</NavText>
       </NavItem>
     </NavBarContainer>

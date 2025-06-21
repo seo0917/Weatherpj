@@ -90,10 +90,34 @@ const keywords = [
 
 const WeatherWriteKey = () => {
   const [selectedIdx, setSelectedIdx] = useState(null);
+  const [inputValue, setInputValue] = useState('');
+  const navigate = useNavigate();
+
+  // 입력값과 선택된 키워드가 바뀔 때마다 localStorage에 저장
+  React.useEffect(() => {
+    localStorage.setItem('placeText', inputValue);
+    localStorage.setItem('placeKeyword', selectedIdx !== null ? keywords[selectedIdx].label : '');
+  }, [inputValue, selectedIdx]);
+
+  // 엔터 입력 시 텍스트/키워드만 저장하고 /weather-map으로 이동
+  const handleInputKeyDown = (e) => {
+    if (e.key === 'Enter' && inputValue && selectedIdx !== null) {
+      localStorage.setItem('placeText', inputValue);
+      localStorage.setItem('placeKeyword', keywords[selectedIdx].label);
+      navigate('/weather-map');
+    }
+  };
+
   return (
     <Container>
       <CardContainer>
-        <CenterInput placeholder="이곳은 어떤 장소인가요?" fontSize={28}/>
+        <CenterInput
+          placeholder="이곳은 어떤 장소인가요?"
+          fontSize={28}
+          value={inputValue}
+          onChange={e => setInputValue(e.target.value)}
+          onKeyDown={handleInputKeyDown}
+        />
         <KeywordLabelContainer>
           {keywords.map((kw, idx) => (
             <KeywordLabel

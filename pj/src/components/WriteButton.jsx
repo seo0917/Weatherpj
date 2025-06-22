@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import writeicon from '../assets/writeicon.svg';
+import { useNavigate } from 'react-router-dom';
 
 const StyledWriteButton = styled.button`
   width: 56px;
@@ -23,8 +24,13 @@ const IconImg = styled.img`
 `;
 
 const WriteButton = (props) => {
+  const navigate = useNavigate();
+  const handleClick = (e) => {
+    if (props.onClick) props.onClick(e);
+    navigate('/weather-write');
+  };
   return (
-    <StyledWriteButton {...props}>
+    <StyledWriteButton {...props} onClick={handleClick}>
       <IconImg src={writeicon} alt="write icon" />
     </StyledWriteButton>
   );

@@ -146,14 +146,14 @@ const OverlayTextInput = styled.input`
   font-family: Pretendard;
   font-size: 20px; 
   font-weight: 500;
-  padding: 0 16px;
+  padding: 0 8px;
   background: transparent;
   color: #141414;
   outline: none;
   border: none;
   cursor: default;
   &::placeholder {
-    color: #141414;
+    color: #535353;
     font-weight: 500;
   }
   &:hover {
@@ -408,7 +408,13 @@ const WeatherMap = () => {
                 style={{ display: 'none' }}
                 onChange={e => {
                   if (e.target.files && e.target.files[0]) {
-                    setSelectedFile(e.target.files[0]);
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setSelectedFile(file);
+                      localStorage.setItem('communityCardImage', reader.result);
+                    };
+                    reader.readAsDataURL(file);
                   }
                 }}
               />

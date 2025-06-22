@@ -208,6 +208,11 @@ const WeatherWrite = () => {
     setHuePos(x);
   };
 
+  const handleSave = () => {
+    const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    localStorage.setItem('communityCardBg', color);
+  };
+
   return (
     <Container>
       <Card style={{ position: 'relative' }} onClick={handleCardClick}>
@@ -232,7 +237,7 @@ const WeatherWrite = () => {
                 </HueSlider>
                 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <SaveButton>등록하기</SaveButton>
+                  <SaveButton onClick={handleSave}>등록하기</SaveButton>
                 </div>
               </div>
             </ColorPickerContainer>

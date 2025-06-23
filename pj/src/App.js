@@ -9,6 +9,7 @@ import WeatherMap from './pages/WeatherMap';
 import WeatherWrite from './pages/WeatherWrite';
 import WeatherWriteKey from './pages/WeatherWriteKey';
 import Community from './pages/Community';
+import WeeklyReportPage from './pages/WeeklyReportPage';
 import React, { useState } from 'react';
 
 function AppContent() {
@@ -37,6 +38,7 @@ function AppContent() {
           <Route path="/weather-write" element={<WeatherWrite />} />
           <Route path="/weatherwritekey" element={<WeatherWriteKey />} />
           <Route path="/community" element={<Community />} />
+          <Route path="/weekly-report" element={<WeeklyReportPage />} />
         </Routes>
       </div>
       

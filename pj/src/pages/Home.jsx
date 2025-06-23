@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import rain from '../assets/rain.svg';
 import temper from '../assets/temper.svg';
 import humidity from '../assets/humidity.svg';
+import { weatherAPI } from '../services/api';
 
 const HomeContainer = styled.div`
   width: 440px;
@@ -349,10 +350,49 @@ const SheetDivider = styled.div`
 
 export default function Home({ setBottomSheetOpen }) {
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [weatherData, setWeatherData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (setBottomSheetOpen) setBottomSheetOpen(sheetOpen);
   }, [sheetOpen, setBottomSheetOpen]);
+
+  useEffect(() => {
+    const fetchWeatherData = async () => {
+      try {
+        setLoading(true);
+        // 기본 위치로 서울 사용 (실제로는 사용자 위치 또는 저장된 위치 사용)
+        const data = await weatherAPI.getCurrentWeather(37.5665, 126.9780);
+        setWeatherData(data);
+      } catch (error) {
+        console.error('날씨 데이터 조회 실패:', error);
+        // 기본 데이터 설정
+        setWeatherData({
+          temperature: 17,
+          minTemperature: 16,
+          maxTemperature: 20,
+          weatherCondition: '비',
+          location: '서울',
+          details: {
+            precipitation: 12,
+            feelsLike: 15,
+            humidity: 81,
+            precipitationLevel: '보통',
+            humidityLevel: '매우 높음',
+            comfortLevel: '불쾌'
+          },
+          message: {
+            mainText: '비가 먼저 나가서 기다리고 있어요.',
+            subText: '우산 꼭 챙겨서 만나요!'
+          }
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWeatherData();
+  }, []);
 
   // 바텀시트 핸들 클릭 시만 토글
   const handleToggleSheet = () => {
@@ -364,6 +404,19 @@ export default function Home({ setBottomSheetOpen }) {
     e.stopPropagation();
   };
 
+  if (loading) {
+    return (
+      <HomeContainer>
+        <CardContainer>
+          <BackgroundImage bg={bgImg} />
+          <Content>
+            <TopText>날씨 정보를 불러오는 중...</TopText>
+          </Content>
+        </CardContainer>
+      </HomeContainer>
+    );
+  }
+
   return (
     <HomeContainer>
       <CardContainer>
@@ -374,24 +427,31 @@ export default function Home({ setBottomSheetOpen }) {
             비 오는 날엔 느긋해도 괜찮아요.
           </TopText>
           <InfoRow>
-            <InfoBox>25.05.15</InfoBox>
-            <InfoBox>AM 11:00</InfoBox>
-            <StatusBox>보통</StatusBox>
+            <InfoBox>{new Date().toLocaleDateString('ko-KR', { 
+              year: '2-digit', 
+              month: '2-digit', 
+              day: '2-digit' 
+            }).replace(/\./g, '.').replace(/ /g, '')}</InfoBox>
+            <InfoBox>{new Date().toLocaleTimeString('ko-KR', { 
+              hour: '2-digit', 
+              minute: '2-digit',
+              hour12: true 
+            }).toUpperCase()}</InfoBox>
+            <StatusBox>{weatherData?.details?.comfortLevel || '보통'}</StatusBox>
           </InfoRow>
           <Message>
-            비가 먼저 나가서<br />
-            기다리고 있어요.<br />
-            <span style={{fontWeight:400}}>우산 꼭 챙겨서 만나요!</span>
+            {weatherData?.message?.mainText || '오늘도 좋은 하루 보내세요!'}<br />
+            <span style={{fontWeight:400}}>{weatherData?.message?.subText || '기분 좋은 하루 되세요!'}</span>
           </Message>
           <WeatherSection>
             <LocationTempWrapper>
               <LocationRow>
                 <LocationIcon src={locationIcon} />
-                <Location>안산시 상록구 | 비</Location>
+                <Location>{weatherData?.location || '서울'} | {weatherData?.weatherCondition || '맑음'}</Location>
               </LocationRow>
               <TempRow>
                 <Temp>
-                  17
+                  {Math.round(weatherData?.temperature || 17)}
                   <span style={{
                     fontSize: 80,
                     position: 'relative',
@@ -399,9 +459,9 @@ export default function Home({ setBottomSheetOpen }) {
                   }}>°</span>
                 </Temp>
                 <TempRange>
-                  <MinTemp>16</MinTemp>
+                  <MinTemp>{Math.round(weatherData?.minTemperature || 16)}</MinTemp>
                   <RangeLine />
-                  <MaxTemp>20</MaxTemp>
+                  <MaxTemp>{Math.round(weatherData?.maxTemperature || 20)}</MaxTemp>
                 </TempRange>
               </TempRow>
             </LocationTempWrapper>
@@ -417,21 +477,21 @@ export default function Home({ setBottomSheetOpen }) {
         <BottomSheetContainer open={sheetOpen} onClick={handleSheetContainerClick}>
           <BottomSheetHandle onClick={handleToggleSheet} />
           <BottomSheetContent>
-            <SheetTitle>남은 하루 동안<br/>비가 계속 이어질 예정이에요.</SheetTitle>
+            <SheetTitle>남은 하루 동안<br/>{weatherData?.weatherCondition || '맑음'}이 계속 이어질 예정이에요.</SheetTitle>
             <SheetDesc></SheetDesc>
             <SheetRow>
-              <SheetLabel><img src={rain} alt="rain" style={{width:24,height:24,marginRight:8}} />강수량 <SheetBadge color="#97FE76">보통</SheetBadge></SheetLabel>
-              <SheetValue>12<span style={{fontSize:18,marginLeft:4,marginBottom:2}}>mm</span></SheetValue>
+              <SheetLabel><img src={rain} alt="rain" style={{width:24,height:24,marginRight:8}} />강수량 <SheetBadge color="#97FE76">{weatherData?.details?.precipitationLevel || '보통'}</SheetBadge></SheetLabel>
+              <SheetValue>{Math.round(weatherData?.details?.precipitation || 0)}<span style={{fontSize:18,marginLeft:4,marginBottom:2}}>mm</span></SheetValue>
             </SheetRow>
             <SheetDivider />
             <SheetRow>
               <SheetLabel><img src={temper} alt="temper" style={{width:24,height:24,marginRight:8}} />체감온도</SheetLabel>
-              <SheetValue>15<span style={{fontSize:22,marginLeft:4,marginBottom:8}}>°</span></SheetValue>
+              <SheetValue>{Math.round(weatherData?.details?.feelsLike || 17)}<span style={{fontSize:22,marginLeft:4,marginBottom:8}}>°</span></SheetValue>
             </SheetRow>
             <SheetDivider />
             <SheetRow>
-              <SheetLabel><img src={humidity} alt="humidity" style={{width:24,height:24,marginRight:8}} />습도 <SheetBadge color="#FF8767">매우 높음</SheetBadge> <SheetBadge color="#FFB064">불쾌</SheetBadge></SheetLabel>
-              <SheetValue>81<span style={{fontSize:18,marginLeft:4,marginBottom:4}}>%</span></SheetValue>
+              <SheetLabel><img src={humidity} alt="humidity" style={{width:24,height:24,marginRight:8}} />습도 <SheetBadge color="#FF8767">{weatherData?.details?.humidityLevel || '보통'}</SheetBadge> <SheetBadge color="#FFB064">{weatherData?.details?.comfortLevel || '쾌적'}</SheetBadge></SheetLabel>
+              <SheetValue>{Math.round(weatherData?.details?.humidity || 50)}<span style={{fontSize:18,marginLeft:4,marginBottom:4}}>%</span></SheetValue>
             </SheetRow>
             <SheetDivider />
           </BottomSheetContent>

@@ -303,13 +303,11 @@ export default function Write() {
       localStorage.setItem('userWeatherText', text.trim());
       localStorage.setItem('hasUserText', 'true');
     }
-    // 저장된 날짜를 My 페이지로 전달
-    navigate('/my', { state: { selectedDate: recordDate } });
+    navigate('/my');
   };
 
   const handleBack = () => {
-    // 저장된 날짜를 My 페이지로 전달
-    navigate('/my', { state: { selectedDate: recordDate } });
+    navigate('/my');
   };
 
   const saveToBackend = async () => {

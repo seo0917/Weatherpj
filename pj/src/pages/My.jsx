@@ -6,7 +6,7 @@ import locationIcon from '../assets/locationIcon.svg';
 import plus from '../assets/plus.svg';
 import writeIcon from '../assets/writeicon.svg';
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { recordAPI, weatherAPI } from '../services/api';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -501,7 +501,6 @@ const RecordCard = ({ record }) => {
 
 export default function My() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedType, setSelectedType] = useState('DAY');
   const [loading, setLoading] = useState(false);
@@ -516,16 +515,13 @@ export default function My() {
     if (savedDate) {
       const date = new Date(savedDate);
       if (!isNaN(date.getTime())) {
-        // 저장된 날짜를 그대로 사용 (이미 올바른 날짜)
-        return date;
+        // 한국 시간대로 변환
+        return new Date(date.getTime() + (9 * 60 * 60 * 1000));
       }
     }
     // 오늘 날짜를 한국 시간대로 반환
     const now = new Date();
-    const koreaTimeOffset = 9 * 60; // 한국은 UTC+9
-    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-    const koreaTime = new Date(utc + (koreaTimeOffset * 60000));
-    return koreaTime;
+    return new Date(now.getTime() + (9 * 60 * 60 * 1000));
   };
   
   const [selectedDate, setSelectedDate] = useState(getInitialDate);
@@ -538,17 +534,6 @@ export default function My() {
     // 현재 위치와 날씨 정보 가져오기
     getCurrentLocationAndWeather();
   }, [selectedDate, userId]);
-
-  // Write 페이지에서 돌아올 때 전달받은 날짜 처리
-  useEffect(() => {
-    if (location.state?.selectedDate) {
-      const newDate = new Date(location.state.selectedDate);
-      if (!isNaN(newDate.getTime())) {
-        setSelectedDate(newDate);
-        localStorage.setItem('selectedDate', newDate.toISOString());
-      }
-    }
-  }, [location.state]);
 
   // Write 페이지에서 돌아올 때 데이터 새로고침
   useEffect(() => {
@@ -595,7 +580,7 @@ export default function My() {
     // date가 Date 객체인지 확인하고 변환
     const newDate = date instanceof Date ? date : new Date(date);
     
-    // 캘린더에서 선택한 날짜를 그대로 사용
+    // 캘린더에서 선택한 날짜를 그대로 사용 (이미 한국 시간대)
     setSelectedDate(newDate);
     
     // localStorage에 날짜 저장 (ISO 문자열로)
@@ -606,7 +591,7 @@ export default function My() {
     
     // 해당 날짜의 기록 불러오기 (YYYY-MM-DD 형식)
     const dateStr = newDate.toISOString().split('T')[0];
-    await loadRecordForDate(newDate);
+    await loadRecordForDate(dateStr);
   };
 
   const formatDate = (date) => {
@@ -615,34 +600,30 @@ export default function My() {
       if (!date || typeof date !== 'object' || !date.getFullYear) {
         console.warn('Invalid date object passed to formatDate:', date);
         const now = new Date();
-        const koreaTimeOffset = 9 * 60; // 한국은 UTC+9
-        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-        const koreaTime = new Date(utc + (koreaTimeOffset * 60000));
-        return `${koreaTime.getFullYear()}.${String(koreaTime.getMonth() + 1).padStart(2, '0')}.${String(koreaTime.getDate()).padStart(2, '0')}`;
+        const koreanNow = new Date(now.getTime() + (9 * 60 * 60 * 1000));
+        return `${koreanNow.getFullYear()}.${String(koreanNow.getMonth() + 1).padStart(2, '0')}.${String(koreanNow.getDate()).padStart(2, '0')}`;
       }
       
       // 유효한 날짜인지 확인
       if (isNaN(date.getTime())) {
         console.warn('Invalid date value:', date);
         const now = new Date();
-        const koreaTimeOffset = 9 * 60; // 한국은 UTC+9
-        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-        const koreaTime = new Date(utc + (koreaTimeOffset * 60000));
-        return `${koreaTime.getFullYear()}.${String(koreaTime.getMonth() + 1).padStart(2, '0')}.${String(koreaTime.getDate()).padStart(2, '0')}`;
+        const koreanNow = new Date(now.getTime() + (9 * 60 * 60 * 1000));
+        return `${koreanNow.getFullYear()}.${String(koreanNow.getMonth() + 1).padStart(2, '0')}.${String(koreanNow.getDate()).padStart(2, '0')}`;
       }
       
-      // 날짜를 그대로 사용 (이미 올바른 날짜)
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
+      // 한국 시간대로 변환
+      const koreanDate = new Date(date.getTime() + (9 * 60 * 60 * 1000));
+      
+      const year = koreanDate.getFullYear();
+      const month = String(koreanDate.getMonth() + 1).padStart(2, '0');
+      const day = String(koreanDate.getDate()).padStart(2, '0');
       return `${year}.${month}.${day}`;
     } catch (error) {
       console.error('Error in formatDate:', error);
       const now = new Date();
-      const koreaTimeOffset = 9 * 60; // 한국은 UTC+9
-      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-      const koreaTime = new Date(utc + (koreaTimeOffset * 60000));
-      return `${koreaTime.getFullYear()}.${String(koreaTime.getMonth() + 1).padStart(2, '0')}.${String(koreaTime.getDate()).padStart(2, '0')}`;
+      const koreanNow = new Date(now.getTime() + (9 * 60 * 60 * 1000));
+      return `${koreanNow.getFullYear()}.${String(koreanNow.getMonth() + 1).padStart(2, '0')}.${String(koreanNow.getDate()).padStart(2, '0')}`;
     }
   };
 

@@ -8,10 +8,9 @@ import mapActiveIcon from '../assets/map_act.svg';
 import myIcon from '../assets/my.svg';
 import myActiveIcon from '../assets/my_act.svg';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
 
 const Container = styled.div`
-  padding: 15px;
+  padding: 32px;
   background: #fff;
   min-height: 100vh;
 `;
@@ -25,7 +24,7 @@ const TopBar = styled.div`
 const BackButton = styled.button`
   background: none;
   border: none;
-  font-size: 16px;
+  font-size: 18px;
   color: #234E83;
   cursor: pointer;
   padding: 8px 12px;
@@ -44,7 +43,7 @@ const DateRange = styled.div`
 
 const Summary = styled.div`
   margin: 16px 0; 
-  font-size: 18px; 
+  font-size: 14px; 
   color: #333;
 `;
 
@@ -183,6 +182,20 @@ const ErrorMsg = styled.div`
   padding: 12px;
   margin: 24px 0;
   text-align: center;
+`;
+
+const NavBar = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 440px;
+  height: 70px;
+  background: color(display-p3 0.5654 0.78 0.8732);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
 `;
 
 const WeekControl = styled.button`
@@ -833,7 +846,20 @@ export default function WeeklyReportPage() {
           </RecordList>
         )}
       </>}
-      <Navbar />
+      <NavBar>
+        <div style={{display:'flex',flexDirection:'column',alignItems:'center',cursor:'pointer'}} onClick={()=>navigate('/home')}>
+          <img src={homeIcon} alt="home" style={{width:40,height:40,marginBottom:4}} />
+          <div style={{marginTop:13,color:'#75ACC5',fontFamily:'Pretendard',fontSize:12,fontWeight:500,textTransform:'uppercase'}}>HOME</div>
+        </div>
+        <div style={{display:'flex',flexDirection:'column',alignItems:'center',cursor:'pointer'}} onClick={()=>navigate('/weather-map')}>
+          <img src={mapIcon} alt="map" style={{width:40,height:40,marginBottom:4,filter:'grayscale(1)'}} />
+          <div style={{marginTop:13,color:'#75ACC5',fontFamily:'Pretendard',fontSize:12,fontWeight:500,textTransform:'uppercase'}}>WEATHER MAP</div>
+        </div>
+        <div style={{display:'flex',flexDirection:'column',alignItems:'center',cursor:'pointer'}} onClick={()=>navigate('/my')}>
+          <img src={myActiveIcon} alt="my" style={{width:40,height:40,marginBottom:4}} />
+          <div style={{marginTop:13,color:'#DAEDFF',fontFamily:'Pretendard',fontSize:12,fontWeight:500,textTransform:'uppercase'}}>MY</div>
+        </div>
+      </NavBar>
     </Container>
   );
 } 

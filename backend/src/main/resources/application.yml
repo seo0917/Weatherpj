@@ -1,0 +1,94 @@
+server:
+  port: 8080
+  url: http://localhost:8080
+
+spring:
+  # 개발 환경용 H2 설정 (프로덕션에서는 MySQL 사용)
+  profiles:
+    active: dev
+  
+  datasource:
+    # 개발용 H2 인메모리 DB (빠른 개발을 위해)
+    url: jdbc:h2:mem:inforecord;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      # 개발 시에는 create-drop, 프로덕션에서는 validate 사용
+      ddl-auto: create-drop
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        # SQL 성능 모니터링을 위한 설정
+        generate_statistics: true
+
+  # H2 콘솔 활성화 (개발용)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: false
+
+  # 입력 데이터 검증을 위한 설정
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+
+  # 파일 업로드 설정
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      enabled: true
+
+# 파일 업로드 디렉토리 설정
+file:
+  upload-dir: images
+
+# 로깅 설정
+logging:
+  level:
+    com.inforecord: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    # 더 상세한 로그 패턴
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+---
+# 프로덕션 환경용 MySQL 설정
+spring:
+  config:
+    activate:
+      on-profile: prod
+  
+  datasource:
+    url: jdbc:mysql://localhost:3306/inforecord?useSSL=false&serverTimezone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
+    
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    
+  h2:
+    console:
+      enabled: false
+
+logging:
+  level:
+    com.inforecord: INFO
+    org.springframework.web: WARN
